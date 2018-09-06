@@ -1,0 +1,47 @@
+<RCC>
+    <qresource prefix="/">
+        <file>IMG/Board.jpg</file>
+        <file>IMG/red_PAO.png</file>
+        <file>IMG/black_BING.png</file>
+        <file>IMG/black_JIANG.png</file>
+        <file>IMG/black_JU.png</file>
+        <file>IMG/black_PAO.png</file>
+        <file>IMG/black_SHI.png</file>
+        <file>IMG/black_XIANG.png</file>
+        <file>IMG/no.png</file>
+        <file>IMG/red_BING.png</file>
+        <file>IMG/red_JIANG.png</file>
+        <file>IMG/red_JU.png</file>
+        <file>IMG/red_MA.png</file>
+        <file>IMG/red_SHI.png</file>
+        <file>IMG/red_XIANG.png</file>
+        <file>IMG/black_MA.png</file>
+        <file>IMG/BackGround.jpg</file>
+        <file>IMG/hover.png</file>
+        <file>IMG/press.png</file>
+        <file>IMG/psd10481.png</file>
+        <file>IMG/dark.png</file>
+        <file>IMG/light.png</file>
+        <file>IMG/black.png</file>
+        <file>IMG/bushi.png</file>
+        <file>IMG/jushi.png</file>
+        <file>IMG/red.png</file>
+        <file>IMG/draw.png</file>
+        <file>IMG/draw_hover.png</file>
+        <file>IMG/draw_pressed.png</file>
+        <file>IMG/giveup.png</file>
+        <file>IMG/giveup_hover.png</file>
+        <file>IMG/giveup_pressed.png</file>
+        <file>IMG/load.png</file>
+        <file>IMG/load_hover.png</file>
+        <file>IMG/load_pressed.png</file>
+        <file>IMG/save.png</file>
+        <file>IMG/save_hover.png</file>
+        <file>IMG/save_pressed.png</file>
+        <file>IMG/tie.png</file>
+        <file>IMG/tie_hover.png</file>
+        <file>IMG/tie_pressed.png</file>
+        <file>IMG/back.png</file>
+        <file>SOUND/Woman_jiangjun.mp3</file>
+    </qresource>
+</RCC>
