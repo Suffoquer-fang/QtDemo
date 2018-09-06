@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../BumpBalls/BumpBalls/resource/fig/ball.png</file>
+        <file>IMG/s.png</file>
+        <file>IMG/a.png</file>
+        <file>IMG/face.png</file>
+        <file>IMG/WHITE_SHALLOW.png</file>
+    </qresource>
+</RCC>
