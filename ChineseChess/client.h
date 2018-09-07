@@ -22,6 +22,8 @@ public:
     void initAsClient();
     void initAsServer();
 
+    void loadFile();
+
 private slots:
     void sendMessage(QString msg);
     void on_pushButton_clicked();
@@ -39,6 +41,8 @@ private:
     QTcpServer *server;
 
     GameWindow *gameWindow;
+
+    bool isLoadMode;
 
 };
 

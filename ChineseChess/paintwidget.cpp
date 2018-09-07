@@ -110,8 +110,7 @@ void PaintWidget::mouseReleaseEvent(QMouseEvent *ev)
 
             if(m_game->moveStone(m_map->focusStone(), x, y))
             {
-
-                emit stoneMoved(QString::number(m_map->recentMove()->old_x()) + QString::number(m_map->recentMove()->old_y()) + QString::number(x) + QString::number(y));
+                emit stoneMoved("M"+QString::number(m_map->recentMove()->old_x()) + QString::number(m_map->recentMove()->old_y()) + QString::number(x) + QString::number(y));
                 emit roundEnded();
             }
         }

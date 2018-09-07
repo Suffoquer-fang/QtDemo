@@ -7,6 +7,10 @@
 #include <QDebug>
 
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QFileInfo>
 
 GameWindow::GameWindow(Game *game, StoneColor color, QWidget *parent) :
     QMainWindow(parent),
@@ -25,6 +29,7 @@ GameWindow::GameWindow(Game *game, StoneColor color, QWidget *parent) :
     paintWidget->setPlayerColor(playerColor);
 
     controlWidget = new ControlWidget(this);
+    controlWidget->newRound(game->currColor());
 
     paintWidget->setGeometry(0, 0, 750, 750);
     controlWidget->setGeometry(800, 70, 280, 740);
@@ -59,6 +64,7 @@ GameWindow::GameWindow(Game *game, StoneColor color, QWidget *parent) :
 
     connect(controlWidget, &ControlWidget::click_giveup, this, &GameWindow::giveup);
     connect(controlWidget, &ControlWidget::click_tie, this, &GameWindow::askForATie);
+    connect(controlWidget, &ControlWidget::click_save, this, &GameWindow::save);
     connect(controlWidget, &ControlWidget::timeRunOut, this, &GameWindow::giveup);
 
 
@@ -103,7 +109,7 @@ void GameWindow::newRound()
 void GameWindow::giveup()
 {
     if(game->isGameEnd())   return;
-    emit newMsgToSend("GIVEUP");
+    emit newMsgToSend("OGIVEUP\n");
     game->endGame();
     game->setWinner(playerColor == RED ? BLACK : RED);
     newRound();
@@ -112,20 +118,50 @@ void GameWindow::giveup()
 void GameWindow::askForATie()
 {
     if(game->isGameEnd())   return;
-    emit newMsgToSend("AFAT");
+    emit newMsgToSend("OAFAT\n");
 }
 
 void GameWindow::acceptTie()
 {
-    emit newMsgToSend("ACPT");
+    if(game->isGameEnd())   return;
+    emit newMsgToSend("OACPT\n");
     game->endGame();
     game->setWinner(EMPTY);
     this->newRound();
-
 }
 
 void GameWindow::save()
-{}
+{
+    QString savePath = QFileDialog::getSaveFileName(this, "Save", "", tr("Text File(.txt)"));
+    if(savePath.isEmpty())  return;
+    if(QFileInfo(savePath).suffix().isEmpty())
+        savePath.append(".txt");
+    QFile file(savePath);
+    if(!file.open(QIODevice::WriteOnly))    return;
+    QTextStream stream(&file);
+
+    stream << (game->currColor() == RED ? "red" : "black") << "\r\n";
+
+    stream << stone2File(STONE_JIANG, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_SHI, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_XIANG, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_MA, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_JU, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_PAO, game->currColor()) << "\r\n";
+    stream << stone2File(STONE_BING, game->currColor()) << "\r\n";
+
+    StoneColor otherColor = game->currColor() == RED ? BLACK : RED;
+    stream << (otherColor == RED ? "red" : "black") << "\r\n";
+
+    stream << stone2File(STONE_JIANG, otherColor) << "\r\n";
+    stream << stone2File(STONE_SHI, otherColor) << "\r\n";
+    stream << stone2File(STONE_XIANG, otherColor) << "\r\n";
+    stream << stone2File(STONE_MA, otherColor) << "\r\n";
+    stream << stone2File(STONE_JU, otherColor) << "\r\n";
+    stream << stone2File(STONE_PAO, otherColor) << "\r\n";
+    stream << stone2File(STONE_BING, otherColor) << "\r\n";
+
+}
 
 void GameWindow::playSounds()
 {
@@ -139,4 +175,24 @@ void GameWindow::playSounds()
         qDebug() << "jiangjun";
         jiangjun_sound->play();
     }
+}
+
+QString GameWindow::stone2File(StoneType type, StoneColor color)
+{
+    int cnt = 0;
+    QString ret = "";
+
+    for(int i = 0; i < game->map()->ally(color).size(); ++i)
+    {
+        if(game->map()->ally(color).at(i)->type() == type)
+        {
+            cnt++;
+            StoneClass *tmp = game->map()->ally(color).at(i);
+            ret += " <" + QString::number(8 - tmp->y()) + "," + QString::number(tmp->x()) + ">";
+        }
+    }
+
+    ret.push_front(QString::number(cnt));
+
+    return ret;
 }

@@ -3,6 +3,8 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QIODevice>
+#include <QFile>
 
 
 Client::Client(QWidget *parent) :
@@ -14,7 +16,7 @@ Client::Client(QWidget *parent) :
     socket = nullptr;
     server = nullptr;
 
-
+    isLoadMode = false;
 
 }
 
@@ -92,28 +94,41 @@ void Client::on_pushButton_2_clicked()
 void Client::on_pushButton_3_clicked()
 {
     if(socket != nullptr)
-        socket->write(QString("2124").toUtf8());
+    {
+        if(isLoadMode)
+        {
+            socket->write("LoadGame");
+            loadFile();
+        }
+        else
+            socket->write("NewGame");
+    }
 }
 
 void Client::initAsClient()
 {
-    gameWindow = new GameWindow(new Game, BLACK);
+    //gameWindow = new GameWindow(new Game, BLACK);
     connect(socket, &QTcpSocket::readyRead, this, &Client::getMsg);
     connect(gameWindow, SIGNAL(newMsgToSend(QString)), this, SLOT(sendMessage(QString)));
-    gameWindow->show();
+    //gameWindow->show();
 }
 
 void Client::initAsServer()
 {
-    gameWindow = new GameWindow(new Game, RED);
+    //gameWindow = new GameWindow(new Game, RED);
     socket = server->nextPendingConnection();
     connect(socket, &QTcpSocket::readyRead, this, &Client::getMsg);
     connect(gameWindow, SIGNAL(newMsgToSend(QString)), this, SLOT(sendMessage(QString)));
-    gameWindow->show();
+    //gameWindow->show();
 }
 
 void Client::sendMessage(QString msg)
 {
     if(socket != nullptr)
         socket->write(msg.toUtf8());
+}
+
+void Client::loadFile()
+{
+
 }

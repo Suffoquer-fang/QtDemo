@@ -14,7 +14,7 @@ public:
     void nextRound();
     bool moveStone(StoneClass *stone, int tx, int ty);
 
-
+    void setCurrColor(StoneColor color) {m_currColor = color;}
 
     MapClass* map() {return m_map;}
     StoneColor currColor() {return m_currColor;}

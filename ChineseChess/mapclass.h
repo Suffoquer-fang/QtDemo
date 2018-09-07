@@ -45,6 +45,10 @@ public:
     bool is_JIANGJUN(StoneColor color);
     StoneColor getWinner();
 
+    void clear() {m_red.clear(); m_black.clear();}
+    void addRedStone(StoneClass *stone) {m_red.push_back(stone);}
+    void addBlackStone(StoneClass *stone) {m_black.push_back(stone);}
+
 private:
     QVector<StoneClass*> m_red;
     QVector<StoneClass*> m_black;

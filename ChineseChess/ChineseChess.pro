@@ -32,7 +32,10 @@ SOURCES += \
     mapclass.cpp \
     gamewindow.cpp \
     paintwidget.cpp \
-    controlwidget.cpp
+    controlwidget.cpp \
+    mainwindow.cpp \
+    serverdialog.cpp \
+    clientdialog.cpp
 
 HEADERS += \
         client.h \
@@ -41,12 +44,18 @@ HEADERS += \
     stone.h \
     gamewindow.h \
     paintwidget.h \
-    controlwidget.h
+    controlwidget.h \
+    mainwindow.h \
+    serverdialog.h \
+    clientdialog.h
 
 FORMS += \
         client.ui \
     gamewindow.ui \
-    controlwidget.ui
+    controlwidget.ui \
+    mainwindow.ui \
+    serverdialog.ui \
+    clientdialog.ui
 
 RESOURCES += \
     res.qrc

@@ -53,6 +53,9 @@ private:
     QMediaPlayer *go_sound;
     QMediaPlayer *win_sound, *lose_sound, *tie_sound;
 
+
+    QString stone2File(StoneType type, StoneColor color);
+
 public:
 
     PaintWidget *paintWidget;

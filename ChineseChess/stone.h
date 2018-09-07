@@ -38,6 +38,7 @@ public:
     StoneClass(StoneType type, StoneColor color) {m_type = type; m_color = color; m_isSelected = false;}
     StoneClass(int id, StoneColor color)
     {
+        m_id = id;
         m_color = color; m_isSelected = false;
         switch (id) {
         case 1:
@@ -73,6 +74,7 @@ private:
     bool m_isSelected;
     int m_x, m_y;
     StoneColor m_color;
+    int m_id;
 
 public:
     void select() {m_isSelected = true;}
@@ -86,6 +88,7 @@ public:
     StoneType type() {return m_type;}
     int x() {return m_x;}
     int y() {return m_y;}
+    int id() {return m_id;}
 
     bool isSelected() {return m_isSelected;}
     //bool isAlive() {return m_isAlive;}

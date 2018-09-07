@@ -85,7 +85,6 @@ void ControlWidget::newRound(StoneColor color)
     m_cntTime = 180;
     if(color == RED)
     {
-
         ui->lcdNumber_3->display("00:00");
     }else
     {
@@ -127,6 +126,9 @@ void ControlWidget::on_pushButton_clicked()
 void ControlWidget::endGame()
 {
     m_timeCounter->stop();
+    ui->pushButton->setEnabled(false);
+    ui->pushButton_2->setEnabled(false);
+    ui->pushButton_3->setEnabled(false);
 }
 
 void ControlWidget::on_pushButton_3_clicked()
