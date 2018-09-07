@@ -9,6 +9,8 @@
 #include <QMouseEvent>
 #include <QTimer>
 
+#include <QtMultimedia>
+
 #include <mapclass.h>
 #include <game.h>
 
@@ -46,6 +48,8 @@ private:
     QPixmap *board;
     QPixmap *red_JIANG, *red_SHI, *red_XIANG, *red_MA, *red_JU, *red_PAO, *red_BING;
     QPixmap *black_JIANG, *black_SHI, *black_XIANG, *black_MA, *black_JU, *black_PAO, *black_BING;
+
+    QMediaPlayer *select_sound;
 
 
     MapClass *m_map;

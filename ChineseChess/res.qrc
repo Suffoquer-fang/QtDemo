@@ -43,5 +43,10 @@
         <file>IMG/tie_pressed.png</file>
         <file>IMG/back.png</file>
         <file>SOUND/Woman_jiangjun.mp3</file>
+        <file>SOUND/go.mp3</file>
+        <file>SOUND/select.mp3</file>
+        <file>SOUND/heqi.mp3</file>
+        <file>SOUND/lose.mp3</file>
+        <file>SOUND/win.mp3</file>
     </qresource>
 </RCC>

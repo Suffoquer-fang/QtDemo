@@ -30,6 +30,7 @@ public:
     StoneColor getPlayerColor() {return playerColor;}
 
     void newRound();
+    void playSounds();
     //void do
 
 signals:
@@ -49,6 +50,8 @@ private:
     StoneColor playerColor;
 
     QMediaPlayer *jiangjun_sound;
+    QMediaPlayer *go_sound;
+    QMediaPlayer *win_sound, *lose_sound, *tie_sound;
 
 public:
 

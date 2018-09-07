@@ -1,6 +1,7 @@
 #include "paintwidget.h"
 #include <QPixmap>
 #include <QDebug>
+#include <QUrl>
 
 PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent)
 {
@@ -10,6 +11,9 @@ PaintWidget::PaintWidget(QWidget *parent) : QWidget(parent)
     m_map = nullptr;
     m_focusTimer = new QTimer(this);
     connect(m_focusTimer, &QTimer::timeout, [this]{m_map->focusStone()->reverse(); update();});
+
+    select_sound = new QMediaPlayer;
+    select_sound->setMedia(QMediaContent(QUrl("qrc:/SOUND/select.mp3")));
 }
 
 void PaintWidget::initPixMap()
@@ -93,6 +97,7 @@ void PaintWidget::mouseReleaseEvent(QMouseEvent *ev)
     if(m_map->getColorAtPoint(x, y) == m_playerColor)
     {
         m_map->setFocusStone(m_map->getStoneAtPoint(x, y));
+        select_sound->play();
 
         m_map->focusStone()->select();
         m_focusTimer->start(500);
