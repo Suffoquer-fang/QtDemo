@@ -2,6 +2,7 @@
 #include "ui_client.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 
 Client::Client(QWidget *parent) :
@@ -35,7 +36,33 @@ void Client::on_pushButton_clicked()
 void Client::getMsg()
 {
     QString tmp = QString(socket->readAll());
-    qDebug() << tmp;
+    //qDebug() << tmp;
+    Game *game = gameWindow->getGame();
+    if(tmp == "GIVEUP")
+    {
+        game->endGame();
+        game->setWinner(gameWindow->getPlayerColor());
+        gameWindow->newRound();
+        return;
+    }
+
+    if(tmp == "AFAT")
+    {
+        if(QMessageBox::question(gameWindow, "询问信息", "对方请求和棋，是否同意？") == QMessageBox::Yes)
+        {
+            gameWindow->acceptTie();
+            return;
+        }
+        return;
+    }
+
+    if(tmp == "ACPT")
+    {
+        game->endGame();
+        game->setWinner(EMPTY);
+        gameWindow->newRound();
+        return;
+    }
 
     int x1 = tmp.left(1).toInt();
     int y1 = tmp.left(2).toInt() - 10 * x1;
@@ -44,7 +71,7 @@ void Client::getMsg()
 
     //qDebug() << x1 << y1 << x2 << y2;
 
-    Game *game = gameWindow->getGame();
+
     game->moveStone(game->map()->getStoneAtPoint(x1, y1), x2, y2);
     //gameWindow->controlWidget->newRound(game->currColor());
     gameWindow->newRound();

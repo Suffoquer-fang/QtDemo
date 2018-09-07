@@ -27,12 +27,20 @@ public:
     void setPlayerColor(StoneColor color) {playerColor = color;}
 
     Game* getGame() {return game;}
+    StoneColor getPlayerColor() {return playerColor;}
 
     void newRound();
     //void do
 
 signals:
     void newMsgToSend(QString msg);
+
+public slots:
+    void giveup();
+    void askForATie();
+    void acceptTie();
+    void save();
+
 
 private:
     Ui::GameWindow *ui;

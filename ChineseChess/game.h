@@ -9,7 +9,7 @@ public:
 
 
     void startNewGame();
-    void startLoadedGame();
+    void startLoadedGame(MapClass *newMap, StoneColor color);
 
     void nextRound();
     bool moveStone(StoneClass *stone, int tx, int ty);
@@ -18,18 +18,21 @@ public:
 
     MapClass* map() {return m_map;}
     StoneColor currColor() {return m_currColor;}
-    //StoneColor playerColor() {return m_playerColor;}
 
-    //bool isMyTurn() {return m_currColor == m_playerColor;}
+    bool isGameEnd() {return m_isGameEnd;}
+    void endGame() {m_isGameEnd = true;}
 
-    //void setPlayerColor(StoneColor color) {m_playerColor = color;}
-
+    StoneColor winnerColor() {return m_winnerColor;}
+    void setWinner(StoneColor color) {m_winnerColor = color;}
 
 private:
 
     MapClass *m_map;
     StoneColor m_currColor;
-    //StoneColor m_playerColor;
+
+    bool m_isGameEnd;
+
+    StoneColor m_winnerColor;
 
 
 };

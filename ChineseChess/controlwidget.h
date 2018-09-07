@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTimer>
 #include <stone.h>
+#include <game.h>
 
 namespace Ui {
 class ControlWidget;
@@ -19,9 +20,22 @@ public:
 
     void newRound(StoneColor color);
     void timeCount();
+    void endGame();
 
 signals:
     void timeRunOut();
+    void click_giveup();
+    void click_save();
+    void click_load();
+    void click_tie();
+
+
+private slots:
+    void on_pushButton_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::ControlWidget *ui;

@@ -41,6 +41,9 @@ GameWindow::GameWindow(Game *game, StoneColor color, QWidget *parent) :
     jiangjun_sound->setVolume(0);
     jiangjun_sound->play();
 
+    connect(controlWidget, &ControlWidget::click_giveup, this, &GameWindow::giveup);
+    connect(controlWidget, &ControlWidget::click_tie, this, &GameWindow::askForATie);
+
 }
 
 GameWindow::~GameWindow()
@@ -51,9 +54,17 @@ GameWindow::~GameWindow()
 void GameWindow::newRound()
 {
     //
-    if(game->map()->getWinner() != EMPTY)
+    if(game->isGameEnd())
     {
-        QMessageBox::information(this, "", "WE HAVE A WINNER");
+        controlWidget->endGame();
+        QString winnerInfo;
+        if(game->winnerColor() == playerColor)
+            winnerInfo = "YOU WIN!";
+        else if(game->winnerColor() == EMPTY)
+            winnerInfo = "IT'S A TIE";
+        else
+            winnerInfo = "YOU LOSE!";
+        QMessageBox::information(this, "", QString("WE HAVE A WINNER\n") + winnerInfo);
         return;
     }
 
@@ -66,3 +77,30 @@ void GameWindow::newRound()
     //paintWidget->setPlayerColor(game->currColor());
     controlWidget->newRound(game->currColor());
 }
+
+void GameWindow::giveup()
+{
+    if(game->isGameEnd())   return;
+    emit newMsgToSend("GIVEUP");
+    game->endGame();
+    game->setWinner(playerColor == RED ? BLACK : RED);
+    newRound();
+}
+
+void GameWindow::askForATie()
+{
+    if(game->isGameEnd())   return;
+    emit newMsgToSend("AFAT");
+}
+
+void GameWindow::acceptTie()
+{
+    emit newMsgToSend("ACPT");
+    game->endGame();
+    game->setWinner(EMPTY);
+    this->newRound();
+
+}
+
+void GameWindow::save()
+{}

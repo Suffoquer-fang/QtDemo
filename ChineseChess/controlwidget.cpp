@@ -117,3 +117,24 @@ void ControlWidget::timeCount()
     }
 }
 
+
+void ControlWidget::on_pushButton_clicked()
+{
+    m_timeCounter->stop();
+    emit click_giveup();
+}
+
+void ControlWidget::endGame()
+{
+    m_timeCounter->stop();
+}
+
+void ControlWidget::on_pushButton_3_clicked()
+{
+    emit click_save();
+}
+
+void ControlWidget::on_pushButton_2_clicked()
+{
+    emit click_tie();
+}

@@ -6,23 +6,33 @@ Game::Game()
     m_map->initMap();
     m_currColor = RED;
     //m_playerColor = RED;
+    m_isGameEnd = false;
 }
 
 void Game::startNewGame()
 {
     m_map->initMap();
+    m_isGameEnd = false;
+    m_currColor = RED;
 }
 
-void Game::startLoadedGame()
+void Game::startLoadedGame(MapClass *newMap, StoneColor color)
 {
     //
+    m_map = newMap;
+    m_isGameEnd = false;
+    m_currColor = color;
 }
 
 void Game::nextRound()
 {
-    m_currColor = (m_currColor == RED) ? BLACK : RED;
-    //m_playerColor = m_currColor;
-    //
+    if(m_map->getWinner() == EMPTY)
+        m_currColor = (m_currColor == RED) ? BLACK : RED;
+    else
+    {
+        setWinner(m_map->getWinner());
+        endGame();
+    }
 }
 
 bool Game::moveStone(StoneClass *stone, int tx, int ty)
@@ -35,5 +45,6 @@ bool Game::moveStone(StoneClass *stone, int tx, int ty)
 
     return false;
 }
+
 
 

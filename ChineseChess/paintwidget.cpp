@@ -82,6 +82,7 @@ void PaintWidget::paintEvent(QPaintEvent *ev)
 void PaintWidget::mouseReleaseEvent(QMouseEvent *ev)
 {
     if(m_game->currColor() != m_playerColor) return;
+    if(m_game->isGameEnd()) return;
 
     qDebug() << ev->x() << ev->y();
     QPoint clickpos = getClickPoint(ev->x(), ev->y());

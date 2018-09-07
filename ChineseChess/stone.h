@@ -31,6 +31,7 @@ enum StoneColor
     EMPTY
 };
 
+
 class StoneClass
 {
 public:
