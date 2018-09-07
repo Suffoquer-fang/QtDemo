@@ -34,7 +34,7 @@ public:
     void startGameAsServer();
     void startGameAsClient();
 
-    void loadFile();
+    bool loadFile();
 
     void sendGameInfo();
 
@@ -51,6 +51,10 @@ private:
 
     QAction *createRoom;
     QAction *joinRoom;
+    QAction *exit;
+
+    QAction *load;
+    QAction *newgame;
 
     GameWindow *gameWindow;
     Game *game;
@@ -70,6 +74,7 @@ private slots:
     void on_radioButton_clicked(bool checked);
     void on_radioButton_2_clicked(bool checked);
     void on_pushButton_2_clicked();
+    void on_pushButton_4_clicked();
 };
 
 #endif // MAINWINDOW_H

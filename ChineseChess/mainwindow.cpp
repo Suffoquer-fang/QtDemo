@@ -29,22 +29,36 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_2->setVisible(false);
     ui->pushButton_3->setEnabled(false);
     ui->pushButton->setVisible(false);
+    ui->pushButton_4->setEnabled(false);
 
     timer = new QTimer;
     connect(timer, &QTimer::timeout, this, &MainWindow::connectionFailed);
 
-    createRoom = new QAction("create", this);
-    joinRoom = new QAction("join", this);
+    createRoom = new QAction("创建房间", this);
+    joinRoom = new QAction("加入房间", this);
+    exit = new QAction("退出", this);
 
-    QMenu *tmp = this->menuBar()->addMenu("Option");
+    load = new QAction("加载游戏", this);
+    newgame = new QAction("新游戏", this);
+
+    QMenu *tmp = this->menuBar()->addMenu("连接选项");
     tmp->addAction(createRoom);
     tmp->addAction(joinRoom);
+    tmp->addSeparator();
+    tmp->addAction(exit);
 
-
-
+    tmp = this->menuBar()->addMenu("游戏选项");
+    tmp->addAction(newgame);
+    tmp->addAction(load);
 
     connect(createRoom, &QAction::triggered, this, &MainWindow::initAsServer);
     connect(joinRoom, &QAction::triggered, this, &MainWindow::initAsClient);
+    connect(exit, &QAction::triggered, [this]{this->on_pushButton_4_clicked();this->close();});
+    connect(newgame, &QAction::triggered, [this]{this->on_radioButton_clicked(true);});
+    connect(load, &QAction::triggered, [this]{this->on_radioButton_2_clicked(true);loadFile();});
+
+    this->setWindowTitle("中国象棋联机对战版");
+
 }
 
 MainWindow::~MainWindow()
@@ -55,6 +69,7 @@ MainWindow::~MainWindow()
 void MainWindow::initAsServer()
 {
     ServerDialog *tmp = new ServerDialog(this);
+    if(server)  server->close();
 
     if(tmp->exec() == 1)
     {
@@ -63,7 +78,7 @@ void MainWindow::initAsServer()
         connect(server, &QTcpServer::newConnection, this, &MainWindow::getNewConnection);
     }
     ui->groupBox_2->setEnabled(true);
-     ui->pushButton_2->setText("断开等待");
+    ui->pushButton_2->setText("断开等待");
     ui->label->setText("IP: " + tmp->ip);
     ui->label_2->setText("PORT: " + QString::number(tmp->port));
     ui->label_3->setText("等待中...");
@@ -83,7 +98,7 @@ void MainWindow::initAsClient()
     ui->groupBox_2->setEnabled(true);
     ui->label->setText("IP: " + tmp->ip);
     ui->label_2->setText("PORT: " + QString::number(tmp->port));
-    ui->label_3->setText("连接中");
+    ui->label_3->setText("连接中...");
     timer->start(5000);
 
     ui->pushButton_3->setEnabled(false);
@@ -94,9 +109,11 @@ void MainWindow::getNewConnection()
 {
     socket = server->nextPendingConnection();
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::getMessage);
+    connect(socket, &QTcpSocket::disconnected, [this]{ui->label_3->setText("连接已断开"); ui->pushButton_3->setEnabled(false);ui->pushButton_4->setEnabled(false);});
     ui->label_3->setText("连接成功");
     ui->pushButton_2->setVisible(false);
     ui->pushButton_3->setEnabled(true);
+    ui->pushButton_4->setEnabled(true);
 
     //startGameAsServer();
 }
@@ -104,8 +121,10 @@ void MainWindow::getNewConnection()
 void MainWindow::socketConnected()
 {
     connect(socket, &QTcpSocket::readyRead, this, &MainWindow::getMessage);
+    connect(socket, &QTcpSocket::disconnected, [this]{ui->label_3->setText("连接已断开"); ui->pushButton_3->setEnabled(false);ui->pushButton_4->setEnabled(false);});
     ui->label_3->setText("连接成功");
     timer->stop();
+    ui->pushButton_4->setEnabled(true);
     //startGameAsClient();
 
 
@@ -126,7 +145,7 @@ void MainWindow::startGameAsServer()
     }
     else
     {
-        loadFile();
+        if(!loadFile()) return;
         sendMessage(QString("LoadGame\n") + (game->currColor() == RED ? "red\n" : "black\n"));
         //qDebug() << "load";
         sendGameInfo();
@@ -148,7 +167,7 @@ void MainWindow::startGameAsClient()
 
 }
 
-void MainWindow::loadFile()
+bool MainWindow::loadFile()
 {
     game = new Game();
     MapClass *tmpmap = new MapClass;
@@ -157,9 +176,9 @@ void MainWindow::loadFile()
 
     if(loadPath.isEmpty())
         loadPath = QFileDialog::getOpenFileName(this, "open", ".");
-    if(loadPath.isEmpty())  return;
+    if(loadPath.isEmpty())  return false;
     QFile file(loadPath);
-    if(!file.open(QIODevice::ReadOnly)) return;
+    if(!file.open(QIODevice::ReadOnly)) return false;
 
         QTextStream stream(&file);
         StoneColor color = (stream.readLine() == "red" ? RED : BLACK);
@@ -199,6 +218,7 @@ void MainWindow::loadFile()
 
 
     game->startLoadedGame(tmpmap, color);
+    return true;
 }
 
 void MainWindow::sendGameInfo()
@@ -301,6 +321,7 @@ void MainWindow::handleOperation(QString tmp)
 {
     if(tmp == "OGIVEUP\n")
     {
+        QMessageBox::information(gameWindow, "INFO", "对手认输");
         game->endGame();
         game->setWinner(gameWindow->getPlayerColor());
         gameWindow->newRound();
@@ -331,6 +352,24 @@ void MainWindow::handleOperation(QString tmp)
     if(tmp == "ORFST\n")
     {
         //
+        return;
+    }
+
+    if(tmp == "OEXITGAME\n")
+    {
+        QMessageBox::information(gameWindow, "INFO", "对手离开了游戏");
+        game->endGame();
+        game->setWinner(gameWindow->getPlayerColor());
+        gameWindow->newRound();
+    }
+
+    if(tmp == "OTIMEOUT\n")
+    {
+        QMessageBox::information(gameWindow, "INFO", "对手超时");
+        game->endGame();
+        game->setWinner(gameWindow->getPlayerColor());
+        gameWindow->newRound();
+        return;
     }
 }
 
@@ -342,11 +381,13 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_radioButton_clicked(bool checked)
 {
+    ui->radioButton->setChecked(checked);
     ui->pushButton->setVisible(!checked);
 }
 
 void MainWindow::on_radioButton_2_clicked(bool checked)
 {
+    ui->radioButton_2->setChecked(checked);
     ui->pushButton->setVisible(checked);
 }
 
@@ -354,8 +395,8 @@ void MainWindow::on_pushButton_2_clicked()
 {
     if(ui->pushButton_2->text() == "断开等待")
     {
-        //disconnect(server, &QTcpServer::newConnection, this, &MainWindow::getNewConnection);
-        delete server;
+
+        server->close();
         ui->label_3->setText("取消等待");
         ui->pushButton_2->setText("重新连接");
     }else
@@ -370,4 +411,12 @@ void MainWindow::connectionFailed()
 {
     ui->label_3->setText("连接失败");
     timer->stop();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    //ui->pushButton_3->setEnabled(false);
+    if(socket != nullptr)
+        socket->disconnectFromHost();
+
 }

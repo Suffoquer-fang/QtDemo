@@ -13,18 +13,21 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>100</y>
+      <y>50</y>
       <width>261</width>
       <height>141</height>
      </rect>
     </property>
     <property name="title">
-     <string>GameMode</string>
+     <string>游戏模式</string>
     </property>
     <widget class="QRadioButton" name="radioButton">
      <property name="geometry">
@@ -36,7 +39,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>NewGame</string>
+      <string>新游戏</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -52,7 +55,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>LoadGame</string>
+      <string>加载游戏</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -65,7 +68,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Load</string>
+      <string>加载文件</string>
      </property>
     </widget>
    </widget>
@@ -73,19 +76,19 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>260</y>
+      <y>240</y>
       <width>261</width>
       <height>201</height>
      </rect>
     </property>
     <property name="title">
-     <string>ConnectionStatus</string>
+     <string>连接信息</string>
     </property>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>40</y>
+       <y>50</y>
        <width>191</width>
        <height>31</height>
       </rect>
@@ -137,7 +140,7 @@
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>70</x>
       <y>510</y>
       <width>89</width>
       <height>24</height>
@@ -145,6 +148,19 @@
     </property>
     <property name="text">
      <string>开始游戏</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>509</y>
+      <width>89</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>断开连接</string>
     </property>
    </widget>
   </widget>

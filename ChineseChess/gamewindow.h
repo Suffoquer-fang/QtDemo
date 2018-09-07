@@ -12,6 +12,8 @@
 #include <QtMultimedia/QMediaContent>
 #include <QUrl>
 
+#include <QCloseEvent>
+
 namespace Ui {
 class GameWindow;
 }
@@ -31,7 +33,9 @@ public:
 
     void newRound();
     void playSounds();
-    //void do
+
+    void closeEvent(QCloseEvent *ev);
+
 
 signals:
     void newMsgToSend(QString msg);
@@ -41,6 +45,7 @@ public slots:
     void askForATie();
     void acceptTie();
     void save();
+    void timeOut();
 
 
 private:

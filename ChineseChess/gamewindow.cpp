@@ -65,7 +65,7 @@ GameWindow::GameWindow(Game *game, StoneColor color, QWidget *parent) :
     connect(controlWidget, &ControlWidget::click_giveup, this, &GameWindow::giveup);
     connect(controlWidget, &ControlWidget::click_tie, this, &GameWindow::askForATie);
     connect(controlWidget, &ControlWidget::click_save, this, &GameWindow::save);
-    connect(controlWidget, &ControlWidget::timeRunOut, this, &GameWindow::giveup);
+    connect(controlWidget, &ControlWidget::timeRunOut, this, &GameWindow::timeOut);
 
 
 }
@@ -195,4 +195,26 @@ QString GameWindow::stone2File(StoneType type, StoneColor color)
     ret.push_front(QString::number(cnt));
 
     return ret;
+}
+
+void GameWindow::closeEvent(QCloseEvent *ev)
+{
+    if(!game->isGameEnd())
+    {
+        if(QMessageBox::Yes == QMessageBox::question(this, "WARNING", "现在退出将直接判负，确定退出吗？"))
+        {
+            emit newMsgToSend("OEXITGAME\n");
+            ev->accept();
+        }else
+            ev->ignore();
+    }
+}
+
+void GameWindow::timeOut()
+{
+    if(game->isGameEnd())   return;
+    emit newMsgToSend("OTIMEOUT\n");
+    game->endGame();
+    game->setWinner(playerColor == RED ? BLACK : RED);
+    newRound();
 }
